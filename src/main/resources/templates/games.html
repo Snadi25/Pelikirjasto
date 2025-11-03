@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Game list</title>
+    <meta charset="UTF-8" />
+</head>
+
+<body>
+
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" value="Sign Out">
+    </form>
+
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Developer</th>
+            <th>Release Date</th>
+            <th>Price</th>
+            <th>Genre</th>
+            <th sec:authorize="hasAuthority('ADMIN')"> </th>
+        </tr>
+
+        <tr th:each="peli : ${games}">
+            <td th:text="${peli.name}"></td>
+            <td th:text="${peli.developer}"></td>
+            <td th:text="${peli.releaseDate}"></td>
+            <td th:text="${peli.price}"></td>
+            <td th:text="${peli.genre != null ? peli.genre.name : 'Genre not defined'}"></td>
+
+            <td sec:authorize="hasAuthority('ADMIN')">
+                <a th:href="@{/deleteGame/{id}(id=${peli.id})}"
+                    onclick="return confirm('Are you sure you want to delete this game?');">Delete</a>
+            </td>
+            <td><a th:href="@{/editGame/{id}(id=${peli.id})}">Edit</a></td>
+
+        </tr>
+    </table>
+
+    <a href="/addGame">Add new game</a>
+
+</body>
+
+</html>
