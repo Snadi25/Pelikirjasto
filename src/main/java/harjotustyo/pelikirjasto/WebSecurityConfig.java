@@ -1,6 +1,6 @@
 package harjotustyo.pelikirjasto;
 
-//import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
+import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +22,7 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain config(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((requests) -> requests
-//                .requestMatchers(toH2Console()).permitAll()
+                .requestMatchers(toH2Console()).permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/games", "/css/**").permitAll()
                 .requestMatchers("/delete/{id}").hasAuthority("ADMIN")
                 .requestMatchers("/addGame", "/saveGame").authenticated()
@@ -32,8 +32,8 @@ public class WebSecurityConfig {
                         .permitAll())
                 .logout((logout) -> logout.permitAll());
 
-        http.csrf((csrf) -> csrf.ignoringRequestMatchers("/api/**"));
- //       http.headers((headers) -> headers.frameOptions((frameOptions) -> frameOptions.sameOrigin()));
+        http.csrf((csrf) -> csrf.ignoringRequestMatchers(toH2Console()));
+        http.headers((headers) -> headers.frameOptions((frameOptions) -> frameOptions.sameOrigin()));
 
         return http.build();
     }
