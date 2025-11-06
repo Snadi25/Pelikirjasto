@@ -55,7 +55,16 @@ public class PeliController {
     }
 
     @PostMapping("/saveGame")
-    public String saveGame(Peli peli) {
+    public String saveGame(@Valid @ModelAttribute("game") Peli peli,
+            BindingResult bindingResult, Model model) {
+
+        if (bindingResult.hasErrors()) {
+            log.error("Validation error during save: ", peli);
+            model.addAttribute("genres", g_repository.findAll());
+            model.addAttribute("years", getYearList());
+            return "addGame";
+        }
+
         log.info("Save game: " + peli);
         p_repository.save(peli);
         return "redirect:/games";
@@ -76,6 +85,8 @@ public class PeliController {
         if (bindingResult.hasErrors()) {
             log.error("Validation error with game: ", peli);
             model.addAttribute("editGame", peli);
+            model.addAttribute("genres", g_repository.findAll());
+            model.addAttribute("years", getYearList());
 
             return "editGameWithValidation";
         }
